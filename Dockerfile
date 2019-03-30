@@ -87,3 +87,14 @@ RUN mkdir -p var/cache var/logs var/sessions \
     && composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest --classmap-authoritative --no-interaction \
     && composer clear-cache \
     && chown -R www-data var
+
+
+# PHP developpments
+FROM symfony_docker_php as symfony_docker_php_dev
+
+ARG XDEBUG_VERSION=2.6.0
+RUN set -eux; \
+	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
+	pecl install xdebug-$XDEBUG_VERSION; \
+	docker-php-ext-enable xdebug; \
+	apk del .build-deps
